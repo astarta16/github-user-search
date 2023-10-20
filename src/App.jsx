@@ -4,6 +4,7 @@ import IconSearch from './assets/icon-search.svg';
 
 const SearchContainer = styled.div`
   display: flex;
+  flex-direction: column; /* To stack the input and the card vertically */
   justify-content: center;
   align-items: center;
   width: 100vw;
@@ -29,7 +30,7 @@ const SearchInput = styled.div`
 `;
 
 const Input = styled.input`
-padding: 15px 20px;
+  padding: 15px 20px;
   border: 1px solid #ffffff;
   border-radius: 15px;
   font-size: 16px;
@@ -54,6 +55,19 @@ const SearchButton = styled.button`
   background: #0079FF;
 `;
 
+const Card = styled.div`
+  width: 730px;
+  height: 419px;
+  background: #fff; 
+  margin-top: 20px; 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+  border-radius: 15px;
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
+`;
+
 const App = () => {
   return (
     <SearchContainer>
@@ -63,6 +77,9 @@ const App = () => {
         </SearchInput>
         <SearchButton>Search</SearchButton>
       </SearchInputContainer>
+      <Card>
+        {/* Card content goes here */}
+      </Card>
     </SearchContainer>
   );
 };
