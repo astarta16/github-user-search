@@ -3,10 +3,89 @@ import styled, { createGlobalStyle } from "styled-components";
 import Moon from "./assets/icon-moon.svg";
 import Sun from "./assets/icon-sun.svg";
 
+const App = () => {
+  const [darkMode, setDarkMode] = useState(false);
+  const [username, setUsername] = useState("");
+  const [userData, setUserData] = useState(null);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const handleSearch = () => {
+    fetch(`https://api.github.com/users/${username}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setUserData(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  return (
+    <Container>
+      <GlobalStyle darkMode={darkMode} />
+      <Header>
+        <Title darkMode={darkMode}>DevFinder</Title>
+        <DarkModeButton onClick={toggleDarkMode}>
+          <Icon src={darkMode ? Sun : Moon} alt="Dark Mode" />
+        </DarkModeButton>
+      </Header>
+      <SearchInputContainer>
+        <Input
+          type="text"
+          placeholder="Search GitHub username…"
+          className={darkMode ? "dark-mode" : ""}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <SearchButton onClick={handleSearch}>Search</SearchButton>
+      </SearchInputContainer>
+      <Card className={darkMode ? "dark-mode" : ""}>
+        {userData && (
+          <div>
+            <UserInfoContainer>
+              <Avatar src={userData.avatar_url} alt="User Avatar" />
+              <UserInfo>
+                <Name darkMode={darkMode}>{userData.name}</Name>
+                <Row>
+                  <Label darkMode={darkMode}>Joined GitHub:</Label>
+                  <Value darkMode={darkMode}>
+                    {new Date(userData.created_at).toLocaleDateString()}
+                  </Value>
+                </Row>
+              </UserInfo>
+            </UserInfoContainer>
+            <Bio darkMode={darkMode}>{userData.bio || "No bio available"}</Bio>
+            <Row>
+              <RepoInfo>
+                <Label darkMode={darkMode}>Repos</Label>
+                <Value darkMode={darkMode}>{userData.public_repos}</Value>
+              </RepoInfo>
+              <RepoInfo>
+                <Label darkMode={darkMode}>Followers</Label>
+                <Value darkMode={darkMode}>{userData.followers}</Value>
+              </RepoInfo>
+              <RepoInfo>
+                <Label darkMode={darkMode}>Following</Label>
+                <Value darkMode={darkMode}>{userData.following}</Value>
+              </RepoInfo>
+            </Row>
+          </div>
+        )}
+      </Card>
+    </Container>
+  );
+};
+
+export default App;
+
 const GlobalStyle = createGlobalStyle`
   body {
     background-color: ${(props) => (props.darkMode ? "#141D2F" : "#F6F8FF")};
-    color: ${(props) => (props.darkMode ? "#F6F8FF" : "#141D2F")};
+    color: ${(props) => (props.darkMode ? "#ffffff" : "#141D2F")};
   }
 `;
 
@@ -35,10 +114,8 @@ const Title = styled.h1`
   margin: 0;
   font-size: 26px;
   font-weight: 700;
-`;
-
-const Theme = styled.p`
-  margin: 0;
+  color: #333;
+  color: ${(props) => (props.darkMode ? "#ffffff" : "#333")};
 `;
 
 const DarkModeButton = styled.button`
@@ -96,10 +173,11 @@ const SearchButton = styled.button`
 
 const Card = styled.div`
   width: 730px;
-  height: 419px;
+  height: auto;
   margin-top: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
+  background: #fff;
 
   &.dark-mode {
     background-color: #1e2a47;
@@ -111,67 +189,56 @@ const Card = styled.div`
   }
 `;
 
-const App = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [username, setUsername] = useState("");
-  const [userData, setUserData] = useState(null);
+const Avatar = styled.img`
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  margin: 20px;
+`;
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+const UserInfoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 20px;
+`;
 
-  const handleSearch = () => {
-    fetch(`https://api.github.com/users/${username}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setUserData(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+`;
 
-  return (
-    <Container>
-      <GlobalStyle darkMode={darkMode} />
-      <Header>
-        <Title>DevFinder</Title>
-        <DarkModeButton onClick={toggleDarkMode}>
-          <Icon src={darkMode ? Sun : Moon} alt="Dark Mode" />
-        </DarkModeButton>
-      </Header>
-      <SearchInputContainer>
-        <Input
-          type="text"
-          placeholder="Search GitHub username…"
-          className={darkMode ? "dark-mode" : ""}
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <SearchButton onClick={handleSearch}>Search</SearchButton>
-      </SearchInputContainer>
-      <Card className={darkMode ? "dark-mode" : ""}>
-        {userData && (
-          <div>
-            <img src={userData.avatar_url} alt="User Avatar" />
-            <h2>{userData.name}</h2>
-            <p>Bio: {userData.bio || "No bio available"}</p>
-            <p>Username: {userData.login}</p>
-            <p>Location: {userData.location || "Location not provided"}</p>
-            <p>Surname: {userData.name}</p>
-            <p>
-              Joined GitHub:{" "}
-              {new Date(userData.created_at).toLocaleDateString()}
-            </p>
-            <p>Repos: {userData.public_repos}</p>
-            <p>Followers: {userData.followers}</p>
-            <p>Following: {userData.following}</p>
-          </div>
-        )}
-      </Card>
-    </Container>
-  );
-};
+const Name = styled.h2`
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: ${(props) => (props.darkMode ? "#ffffff" : "#333")};
+`;
 
-export default App;
+const Bio = styled.p`
+  margin: 10px 0;
+  font-size: 16px;
+  color: ${(props) => (props.darkMode ? "#ffffff" : "#555")};
+`;
+
+const Label = styled.span`
+  font-weight: 600;
+  color: ${(props) => (props.darkMode ? "#ffffff" : "#333")};
+`;
+
+const Value = styled.span`
+  color: ${(props) => (props.darkMode ? "#ffffff" : "#555")};
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+`;
+
+const RepoInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px 20px;
+`;
