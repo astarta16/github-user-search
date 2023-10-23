@@ -5,8 +5,8 @@ import Sun from "./assets/icon-sun.svg";
 
 const GlobalStyle = createGlobalStyle`
   body {
-    background-color: ${(props) => (props.darkMode ? '#141D2F' : '#F6F8FF')};
-    color: ${(props) => (props.darkMode ? '#F6F8FF' : '#141D2F')};
+    background-color: ${(props) => (props.darkMode ? "#141D2F" : "#F6F8FF")};
+    color: ${(props) => (props.darkMode ? "#F6F8FF" : "#141D2F")};
   }
 `;
 
@@ -72,9 +72,9 @@ const Input = styled.input`
   font-size: 16px;
   width: 100%;
   outline: none;
-  
+
   &.dark-mode {
-    background-color: #1E2A47;
+    background-color: #1e2a47;
     color: #ffffff;
   }
 `;
@@ -102,7 +102,7 @@ const Card = styled.div`
   border-radius: 15px;
 
   &.dark-mode {
-    background-color: #1E2A47;
+    background-color: #1e2a47;
     color: #ffffff;
   }
 
@@ -113,9 +113,23 @@ const Card = styled.div`
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [username, setUsername] = useState("");
+  const [userData, setUserData] = useState(null);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
+  };
+
+  const handleSearch = () => {
+    fetch(`https://api.github.com/users/${username}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setUserData(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -132,10 +146,30 @@ const App = () => {
           type="text"
           placeholder="Search GitHub username…"
           className={darkMode ? "dark-mode" : ""}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
-        <SearchButton>Search</SearchButton>
+        <SearchButton onClick={handleSearch}>Search</SearchButton>
       </SearchInputContainer>
-      <Card className={darkMode ? "dark-mode" : ""}></Card>
+      <Card className={darkMode ? "dark-mode" : ""}>
+        {userData && (
+          <div>
+            <img src={userData.avatar_url} alt="User Avatar" />
+            <h2>{userData.name}</h2>
+            <p>Bio: {userData.bio || "No bio available"}</p>
+            <p>Username: {userData.login}</p>
+            <p>Location: {userData.location || "Location not provided"}</p>
+            <p>Surname: {userData.name}</p>
+            <p>
+              Joined GitHub:{" "}
+              {new Date(userData.created_at).toLocaleDateString()}
+            </p>
+            <p>Repos: {userData.public_repos}</p>
+            <p>Followers: {userData.followers}</p>
+            <p>Following: {userData.following}</p>
+          </div>
+        )}
+      </Card>
     </Container>
   );
 };
