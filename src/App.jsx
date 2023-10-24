@@ -49,17 +49,20 @@ const App = () => {
             <UserInfoContainer>
               <Avatar src={userData.avatar_url} alt="User Avatar" />
               <UserInfo>
-                <Name darkMode={darkMode}>{userData.name}</Name>
-                <Row>
-                  <Label darkMode={darkMode}>Joined GitHub:</Label>
-                  <Value darkMode={darkMode}>
-                    {new Date(userData.created_at).toLocaleDateString()}
-                  </Value>
-                </Row>
+                <UserInfoTop>
+                  <Name darkMode={darkMode}>{userData.name}</Name>
+                  <JoinedInfo>
+                    <Label darkMode={darkMode}>Joined:</Label>
+                    <Value darkMode={darkMode}>
+                      {new Date(userData.created_at).toLocaleDateString()}
+                    </Value>
+                  </JoinedInfo>
+                </UserInfoTop>
               </UserInfo>
             </UserInfoContainer>
             <Bio darkMode={darkMode}>{userData.bio || "No bio available"}</Bio>
-            <Row>
+
+            <CenteredInfo darkMode={darkMode}>
               <RepoInfo>
                 <Label darkMode={darkMode}>Repos</Label>
                 <Value darkMode={darkMode}>{userData.public_repos}</Value>
@@ -72,7 +75,7 @@ const App = () => {
                 <Label darkMode={darkMode}>Following</Label>
                 <Value darkMode={darkMode}>{userData.following}</Value>
               </RepoInfo>
-            </Row>
+            </CenteredInfo>
           </div>
         )}
       </Card>
@@ -175,6 +178,7 @@ const Card = styled.div`
   width: 730px;
   height: auto;
   margin-top: 20px;
+
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
   background: #fff;
@@ -193,19 +197,25 @@ const Avatar = styled.img`
   border-radius: 50%;
   width: 100px;
   height: 100px;
-  margin: 20px;
+  margin: 15px;
 `;
 
 const UserInfoContainer = styled.div`
   display: flex;
   align-items: center;
-  margin: 20px;
+  padding: 10px;
 `;
 
 const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 20px;
+`;
+
+const UserInfoTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const Name = styled.h2`
@@ -216,7 +226,6 @@ const Name = styled.h2`
 `;
 
 const Bio = styled.p`
-  margin: 10px 0;
   font-size: 16px;
   color: ${(props) => (props.darkMode ? "#ffffff" : "#555")};
 `;
@@ -230,15 +239,37 @@ const Value = styled.span`
   color: ${(props) => (props.darkMode ? "#ffffff" : "#555")};
 `;
 
+const JoinedInfo = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: right;
+  margin-left: 90px;
+
+  @media (max-width: 768px) {
+    flex-direction: column; 
+    align-items: flex-end;
+    margin-left: 10px; 
+  }
+`;
+
+const CenteredInfo = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  height: 85px;
+  border-radius: 10px;
+  background: ${(props) => (props.darkMode ? "#141D2F" : "#F6F8FF")};
+`;
+
 const Row = styled.div`
   display: flex;
   align-items: center;
-  margin: 10px 0;
 `;
 
 const RepoInfo = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin: 10px 20px;
 `;
