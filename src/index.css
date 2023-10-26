@@ -1,17 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Space+Grotesk&family=Space+Mono&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Poppins&family=Space+Grotesk&family=Space+Mono&display=swap");
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    min-height: 100vh;
-    font-family: 'Space Mono', monospace;
-    background-color: #F6F8FF;
-    width: 100%;
-    display: flex;
-    text-align: center;
+  min-height: 100vh;
+  font-family: "Space Mono", monospace;
+  background-color: #f6f8ff;
+  width: 100%;
+  display: flex;
+  text-align: center;
 }
